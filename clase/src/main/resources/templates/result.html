@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h2>Form enviado</h2>
+    <p><strong>Nombre</strong>
+    <span th:text="${user.nombre}"></span>
+    </p>
+    <p><strong>Email</strong>
+        <span th:text="${user.email}"></span>
+    </p>
+
+    <p><strong>Teléfono</strong>
+        <span th:text="${user.telefono}"></span>
+    </p>
+
+    <p><strong>Dirección</strong>
+        <span th:text="${user.direccion}"></span>
+    </p>
+</div>
+</body>
+</html>
