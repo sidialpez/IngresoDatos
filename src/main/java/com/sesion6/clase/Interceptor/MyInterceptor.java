@@ -9,10 +9,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MyInterceptor implements HandlerInterceptor {
+    //este nos da el formato de la hora, la primer inicia y la otra bloquea
     //private final LocalTime starTime = LocalTime.of(10,0);
 
-    /*private final LocalTime endTime = LocalTime.of(17,0);
-    private final List<String> ipsPermitidas = Arrays.asList(
+    private final LocalTime endTime = LocalTime.of(17,0);
+    /*private final List<String> ipsPermitidas = Arrays.asList(
         "0:0:0:0:0:0:0:1",
         "127.0.0.1"
     );*/
@@ -54,7 +55,7 @@ public class MyInterceptor implements HandlerInterceptor {
        return true;
     }*/
 
-   /*@Override
+    @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response,
                            Object handler, org.springframework.web.servlet.ModelAndView modelAndView)
             throws Exception{
@@ -65,14 +66,14 @@ public class MyInterceptor implements HandlerInterceptor {
 
         System.out.println("Solicitud manejando: "+httpMethod+" "+requestUrl+" "+clienteIp);
 
-    }*/
+    }
 
-   /* @Override
+    @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response,
                                 Object handler, Exception exception) throws Exception{
         System.out.println("After completion invocado");
         //simular alguna tarea para guardar en bitacora
 
-    }*/
+    }
 
 }
