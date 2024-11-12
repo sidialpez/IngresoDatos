@@ -1,0 +1,14 @@
+{
+  "build": {
+    "builder": "nixpacks",
+    "nixpacksPlan": {
+      "phases": {
+        "install": "mvn clean install -DskipTests",
+        "start": "java -jar target/*.jar"
+      },
+      "environment": {
+        "JAVA_VERSION": "21"
+      }
+    }
+  }
+}
