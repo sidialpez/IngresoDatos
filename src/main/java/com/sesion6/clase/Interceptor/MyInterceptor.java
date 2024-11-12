@@ -9,71 +9,52 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MyInterceptor implements HandlerInterceptor {
-    //este nos da el formato de la hora, la primer inicia y la otra bloquea
-    //private final LocalTime starTime = LocalTime.of(10,0);
+    // Hora de fin de acceso permitido
+    private final LocalTime endTime = LocalTime.of(17, 0);
+    private final List<String> ipsPermitidas = Arrays.asList(
+            "0:0:0:0:0:0:0:1",
+            "127.0.0.1"
+    );
 
-    private final LocalTime endTime = LocalTime.of(17,0);
-    /*private final List<String> ipsPermitidas = Arrays.asList(
-        "0:0:0:0:0:0:0:1",
-        "127.0.0.1"
-    );*/
-
-
-    /*@Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception{
-
-        LocalTime currentTime = LocalTime.now();
-        if(currentTime.isBefore(starTime) || currentTime.isAfter(endTime)){
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            String jsonResponse = "{\"message\":\"No se permiten solicitudes" +
-                    "fuera del horario laboral(10 AM - 5 PM)\"}";
-            response.getWriter().write(jsonResponse);
-            response.getWriter().flush();
-            return false;
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        // Obtener la IP del cliente desde el header X-Forwarded-For si está disponible
+        String clientIp = request.getHeader("X-Forwarded-For");
+        if (clientIp == null) {
+            clientIp = request.getRemoteAddr();
         }
-        System.out.println("Estamos dentro del horario laboral");
-        return true;
-    }*/
 
-    /*@Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception{
+        // Permitir todas las IPs si el entorno es producción (detectado por la variable de entorno RAILWAY_ENVIRONMENT)
+        if (System.getenv("RAILWAY_ENVIRONMENT") != null || ipsPermitidas.contains(clientIp)) {
+            System.out.println("Acceso Permitido");
+            return true;
+        }
 
-       String clientIp = request.getRemoteAddr();
-       if(!ipsPermitidas.contains(clientIp)){
-           response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-           response.setContentType("application/json");
-           response.setCharacterEncoding("UTF-8");
-           String jsonResponse = "{\"message\":\"No se permite solicitudes" +
-                   "de esa IP\"}";
-           response.getWriter().write(jsonResponse);
-           response.getWriter().flush();
-           return false;
-       }
-        System.out.println("Acceso Permitido");
-       return true;
-    }*/
+        // Rechazar la solicitud si la IP no es permitida
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        String jsonResponse = "{\"message\":\"No se permiten solicitudes de esa IP\"}";
+        response.getWriter().write(jsonResponse);
+        response.getWriter().flush();
+        return false;
+    }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response,
                            Object handler, org.springframework.web.servlet.ModelAndView modelAndView)
-            throws Exception{
-
+            throws Exception {
         String requestUrl = request.getRequestURI();
         String clienteIp = request.getRemoteAddr();
-        String httpMethod= request.getMethod();
+        String httpMethod = request.getMethod();
 
-        System.out.println("Solicitud manejando: "+httpMethod+" "+requestUrl+" "+clienteIp);
-
+        System.out.println("Solicitud manejada: " + httpMethod + " " + requestUrl + " desde IP " + clienteIp);
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response,
-                                Object handler, Exception exception) throws Exception{
+                                Object handler, Exception exception) throws Exception {
         System.out.println("After completion invocado");
-        //simular alguna tarea para guardar en bitacora
-
+        // Simular alguna tarea para guardar en bitácora, si es necesario
     }
-
 }
