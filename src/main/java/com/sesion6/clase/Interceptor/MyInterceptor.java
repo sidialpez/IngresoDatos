@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MyInterceptor implements HandlerInterceptor {
-    //este nos da el formato de la hora, la primer inicia y la otra bloquea
     //private final LocalTime starTime = LocalTime.of(10,0);
 
     /*private final LocalTime endTime = LocalTime.of(17,0);
